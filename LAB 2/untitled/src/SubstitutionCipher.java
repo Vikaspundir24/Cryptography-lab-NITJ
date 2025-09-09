@@ -12,6 +12,15 @@ public class SubstitutionCipher {
             char eachText = (char)(((plainText.charAt(i) - 'a' + key)%26)+'a');
             cipherText += eachText;
         }
+
         return cipherText;
     }
+    /*static String decipherText(String cipherText, int key){
+        String plainText = "";
+        for (int i=0; i< cipherText.length();i++){
+            char eachText =  (cipherText.charAt(i) - 'a' - key)
+
+        }
+        return plainText;
+    }*/
 }
