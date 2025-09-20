@@ -1,42 +1,69 @@
-class main {
+class railFenceCipher {
+
     public static void main(String[] args) {
-        String plainText = "CRYPTOGRAPHY";
-        int key = 3;
-        String cipherText = cipherText(plainText, key);
-        System.out.println(cipherText);
-      //  String decipherText = decipherText(cipherText,key);
-      //  System.out.println(decipherText);
+        String message = "war will start at 5 am";
+        int rails = 3;
+
+        String encrypted = encrypt(message.toLowerCase(), rails);
+        String decrypted = decrypt(encrypted, rails);
+
+        System.out.println("Original  : " + message);
+        System.out.println("Encrypted : " + encrypted);
+        System.out.println("Decrypted : " + decrypted);
     }
-    //ENCRYPTION
-    static String cipherText(String plainText, int key) {
-        if (key <= 1) return plainText;
-        char[][] rails = new char[key][plainText.length()];
-        int rail = 0;
-        int direction = 1; // 1 down, -1 up
 
-        for (int i = 0; i < plainText.length(); i++) {
-            rails[rail][i] = plainText.charAt(i);
+    static String encrypt(String text, int rails) {
+        StringBuilder[] rail = new StringBuilder[rails];
+        for (int i = 0; i < rails; i++) rail[i] = new StringBuilder();
 
-            if (rail == 0) {
-                direction = 1;
-            } else if (rail == key - 1) {
-                direction = -1;
-            }
-            rail += direction;
+        int r = 0;
+        boolean down = true;
+
+        for (char c : text.toCharArray()) {
+            rail[r].append(c);
+            if (r == 0) down = true;
+            else if (r == rails - 1) down = false;
+            r += down ? 1 : -1;
         }
 
-        String cipher = "";
-        for (int i = 0; i < key; i++) {
-            for (int j = 0; j < plainText.length(); j++) {
-                if (rails[i][j] != '\0') {
-                    cipher += rails[i][j];
+        StringBuilder result = new StringBuilder();
+        for (StringBuilder sb : rail) result.append(sb);
+        return result.toString();
+    }
+
+    static String decrypt(String text, int rails) {
+        int len = text.length();
+        boolean[][] marker = new boolean[rails][len];
+
+        int r = 0;
+        boolean down = true;
+        for (int i = 0; i < len; i++) {
+            marker[r][i] = true;
+            if (r == 0) down = true;
+            else if (r == rails - 1) down = false;
+            r += down ? 1 : -1;
+        }
+
+        char[][] railMatrix = new char[rails][len];
+        int index = 0;
+        for (int i = 0; i < rails; i++) {
+            for (int j = 0; j < len; j++) {
+                if (marker[i][j]) {
+                    railMatrix[i][j] = text.charAt(index++);
                 }
             }
         }
-        return cipher;
+
+        StringBuilder result = new StringBuilder();
+        r = 0;
+        down = true;
+        for (int i = 0; i < len; i++) {
+            result.append(railMatrix[r][i]);
+            if (r == 0) down = true;
+            else if (r == rails - 1) down = false;
+            r += down ? 1 : -1;
+        }
+
+        return result.toString();
     }
-    //DECRYPTION
-//    static String decipherText( String cipherText, int key){
-//
-//    }
 }
